@@ -1,45 +1,25 @@
-Simple Flask Todo App using SQLAlchemy and SQLite database.
+# Todo REST API Documentation
 
-For styling [semantic-ui](https://semantic-ui.com/) is used.
+### Endpoints:
 
-### Setup
-Create project with virtual environment
+- **GET /api/todos**  
+  Returns list of all todos.  
+  Response: 200 OK, JSON array of tasks.
 
-```console
-$ mkdir myproject
-$ cd myproject
-$ python3 -m venv venv
-```
+- **GET /api/todos/<id>**  
+  Returns a single todo by id.  
+  Response: 200 OK with task JSON, or 404 if not found.
 
-Activate it
-```console
-$ . venv/bin/activate
-```
+- **POST /api/todos**  
+  Creates a new todo.  
+  Request JSON: { "title": "string", "description": "string (optional)", "done": bool (optional) }  
+  Response: 201 Created with new todo JSON, or 400 Bad Request if missing title.
 
-or on Windows
-```console
-venv\Scripts\activate
-```
+- **PUT /api/todos/<id>**  
+  Updates existing todo by id.  
+  Request JSON may contain any of: title, description, done  
+  Response: 200 OK with updated todo JSON, or 404 if not found.
 
-Install Flask
-```console
-$ pip install Flask
-$ pip install Flask-SQLAlchemy
-```
-
-Set environment variables in terminal
-```console
-$ export FLASK_APP=app.py
-$ export FLASK_ENV=development
-```
-
-or on Windows
-```console
-$ set FLASK_APP=app.py
-$ set FLASK_ENV=development
-```
-
-Run the app
-```console
-$ flask run
-```
+- **DELETE /api/todos/<id>**  
+  Deletes todo by id.  
+  Response: 200 OK with confirmation message, or 404 if not found.

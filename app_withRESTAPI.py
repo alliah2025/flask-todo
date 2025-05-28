@@ -1,5 +1,3 @@
-#app_withRESTAPI
-
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
@@ -29,7 +27,7 @@ def get_todos():
 
 @app.route('/api/todos/<int:id>', methods=['GET'])
 def get_task(id):
-    task = Task.query.get(id)
+    task = db.session.get(Task, id)  # updated here
     if not task:
         return jsonify({'error': 'Task not found'}), 404
     return jsonify(task.to_dict()), 200
@@ -48,10 +46,11 @@ def create_todo():
     db.session.commit()
     return jsonify(todo.to_dict()), 201
 
-
 @app.route('/api/todos/<int:id>', methods=['PUT'])
 def update_todo(id):
-    todo = Task.query.get_or_404(id)
+    todo = db.session.get(Task, id)  # updated here
+    if not todo:
+        return jsonify({'error': 'Task not found'}), 404
     data = request.get_json()
     if 'title' in data:
         todo.title = data['title']
@@ -62,14 +61,14 @@ def update_todo(id):
     db.session.commit()
     return jsonify(todo.to_dict()), 200
 
-
 @app.route('/api/todos/<int:id>', methods=['DELETE'])
 def delete_todo(id):
-    todo = Task.query.get_or_404(id)
+    todo = db.session.get(Task, id)  # updated here
+    if not todo:
+        return jsonify({'error': 'Task not found'}), 404
     db.session.delete(todo)
     db.session.commit()
     return jsonify({'message': 'Todo deleted'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
-
