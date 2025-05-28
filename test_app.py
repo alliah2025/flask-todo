@@ -32,12 +32,26 @@ def test_get_todos_empty(client):
     assert res.get_json() == []
 
 def test_get_todo_not_found(client):
-    res = client.get('/api/todos/123')
+    res = client.get('/api/todos/999')
     assert res.status_code == 404
+    data = res.get_json()
+    assert 'error' in data
+
+def test_update_todo_not_found(client):
+    res = client.put('/api/todos/999', json={'title': 'New title'})
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+def test_delete_todo_not_found(client):
+    res = client.delete('/api/todos/999')
+    assert res.status_code == 404
+    data = res.get_json()
+    assert 'error' in data
 
 def test_crud_flow(client):
     # Create
     res = client.post('/api/todos', json={'title': 'First task'})
+    assert res.status_code == 201
     todo = res.get_json()
     todo_id = todo['id']
 
@@ -55,6 +69,27 @@ def test_crud_flow(client):
     res = client.delete(f'/api/todos/{todo_id}')
     assert res.status_code == 200
 
-    # Confirm deletion
+    # Confirm Deletion
     res = client.get(f'/api/todos/{todo_id}')
     assert res.status_code == 404
+
+def test_full_update_todo(client):
+    # Create a todo first
+    res = client.post('/api/todos', json={'title': 'Temp title'})
+    assert res.status_code == 201
+    todo = res.get_json()
+    todo_id = todo['id']
+
+    # Update both title and description
+    res = client.put(f'/api/todos/{todo_id}', json={'title': 'Updated title', 'description': 'Updated desc'})
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['title'] == 'Updated title'
+    assert data['description'] == 'Updated desc'
+
+    # Read updated todo
+    res = client.get(f'/api/todos/{todo_id}')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['title'] == 'Updated title'
+    assert data['description'] == 'Updated desc'
