@@ -70,6 +70,10 @@ def delete_todo(id):
     db.session.commit()
     return jsonify({'message': 'Todo deleted'}), 200
 
+@app.route('/')
+def home():
+    return "Welcome to the Flask TODO API!"
+
 if __name__ == '__main__':
     app.run(debug=True)
 

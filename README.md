@@ -1,25 +1,151 @@
-# Todo REST API Documentation
+# Flask Todo App with REST API
 
-### Endpoints:
+This project enhances a simple Flask-based Todo web application by adding a full-featured REST API. The API enables external systems to create, read, update, and delete todo items programmatically, following RESTful principles.
 
-- **GET /api/todos**  
-  Returns list of all todos.  
-  Response: 200 OK, JSON array of tasks.
+## 📌 Original Application
 
-- **GET /api/todos/<id>**  
-  Returns a single todo by id.  
-  Response: 200 OK with task JSON, or 404 if not found.
+The original application is a basic Todo list manager built with Flask and SQLite. It supports:
 
-- **POST /api/todos**  
-  Creates a new todo.  
-  Request JSON: { "title": "string", "description": "string (optional)", "done": bool (optional) }  
-  Response: 201 Created with new todo JSON, or 400 Bad Request if missing title.
+- Viewing all tasks
+- Adding new tasks
+- Updating tasks (marking them as complete/incomplete)
+- Deleting tasks
 
-- **PUT /api/todos/<id>**  
-  Updates existing todo by id.  
-  Request JSON may contain any of: title, description, done  
-  Response: 200 OK with updated todo JSON, or 404 if not found.
+All actions were handled through HTML forms in the web interface.
 
-- **DELETE /api/todos/<id>**  
-  Deletes todo by id.  
-  Response: 200 OK with confirmation message, or 404 if not found.
+## ✨ Enhancements Made
+
+This version introduces a REST API layer that exposes the core functionality through JSON-based HTTP endpoints. Key improvements include:
+
+- Added full CRUD API endpoints under `/api/todos`
+- Returns proper HTTP status codes (200, 201, 400, 404, etc.)
+- Includes input validation and error handling
+- SQLite database for local storage
+- Easy to test with Postman or similar tools
+- Developed a dedicated test suite using `pytest` with 100% test coverage
+
+## 📁 Project Structure
+
+📦 flask-todo
+┣ 📜 app.py
+┣ 📜 app_withRESTAPI.py
+┣ 📜 templates/
+┃ ┗ 📜 index.html
+┣ 📜 test_app.py
+┗ 📜 README.md
+
+
+> All enhancements are done inside the `feature/rest-api` branch.
+
+---
+
+## 📋 API Documentation
+
+### `GET /api/todos`
+
+Fetches all todo items.
+
+- **Response**: `200 OK`
+```json
+[
+  {
+    "id": 1,
+    "title": "Buy milk",
+    "description": "2 bottles",
+    "done": false
+  }
+]
+
+
+### 'POST /api/todos'
+Creates a new todo item.
+- Request JSON:
+{
+  "title": "Read book",
+  "description": "Chapter 4",
+  "done": false
+}
+Response: 201 Created with new task JSON
+Error: 400 Bad Request if title is missing
+
+
+### 'PUT /api/todos/<id>'
+Updates a specific todo item.
+Request JSON
+{
+  "title": "Finish report",
+  "done": true
+}
+Response: 200 OK with updated task
+Error: 404 Not Found if the task does not exist
+
+
+### 'DELETE /api/todos/<id>'
+Deletes a specific todo item.
+Response: 200 OK with confirmation message
+Error: 404 Not Found if the task does not exist
+
+
+## 🚀 How to Run the Project
+Clone the repository:
+git clone <https://github.com/alliah2025/flask-todo.git>
+cd flask-todo
+python -m venv venv
+
+Activate it
+venv\Scripts\activate
+
+Install Flask
+pip install Flask
+pip install Flask-SQLAlchemy
+
+Set environment variables in terminal
+$ set FLASK_APP=app_withRESTAPI.py
+$ set FLASK_ENV=development
+
+Run the database setup
+Before starting the app, make sure the SQLite database is created:
+from app_withRESTAPI import db, app
+with app.app_context():
+    db.create_all()
+    print("Database initialized.")
+
+Run the app
+python app_withRESTAPI.py
+
+Web interface: http://localhost:5000
+API endpoint: http://localhost:5000/api/todos
+
+Test the API using Postman:
+GET /api/todos — List all todos
+POST /api/todos — Create a new todo
+GET /api/todos/<id> — Get a specific todo
+PUT /api/todos/<id> — Update a specific todo
+DELETE /api/todos/<id> — Delete a specific todo
+
+
+
+## 🧪 Testing
+All API endpoints have been covered by unit tests using pytest.
+Positive and negative test cases for all CRUD operations
+Uses an in-memory SQLite database for clean and repeatable test runs
+Run tests with:
+pytest test_app.py
+
+
+## 🎥 Video Presentation
+
+
+## 📌 Repository Links
+🔗 Original Repository: https://github.com/patrickloeber/flask-todo.git
+🔗 Forked with Enhancements: https://github.com/alliah2025/flask-todo/tree/feature/rest-api
+
+
+
+
+
+
+
+
+
+
